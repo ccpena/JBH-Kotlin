@@ -1,9 +1,11 @@
-# jbh-kr
+# Just Be Honest (JBH) with Kotlin
 
-JBH Kotlin Backend
+ JBH[Kotlin/SpringBoot] is the backend component of a self-managed personal finance tracking software. The idea of this personal project is to offer me a comprehensive overview of my financial landscape by allowing manual input and management of financial account data, transfers, and expenses. With a focus on user-driven control, 'Just Be Honest' empowers me to take charge of my financial well-being.
+
+
+## Swagger
 
 http://localhost:9999/jbh/swagger-ui.html
-
 
 # Database Migration
 
