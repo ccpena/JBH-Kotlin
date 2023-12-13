@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - preConditions:
+      - runningAs:
+          username: jbh_admin
+  - includeAll:
+      path: db/changelog/changes/

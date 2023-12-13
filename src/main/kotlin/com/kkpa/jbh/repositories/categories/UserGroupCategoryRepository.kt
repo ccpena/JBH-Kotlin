@@ -1,0 +1,3 @@
+package com.kkpa.jbh.repositories.categories
+
+interface UserGroupCategoryRepository

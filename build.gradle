@@ -1,0 +1,109 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.3.20'
+        swaggerVersion = '2.9.2'
+        springBootVersion = '2.1.2.RELEASE'
+        ktlintGradleVersion = '7.1.0'
+        mockkVersion = '1.8.5'
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:${ktlintGradleVersion}"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-jpa'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+apply plugin: 'org.jlleitschuh.gradle.ktlint-idea'
+
+group = 'com.kkpa'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter() // It works
+}
+
+configurations {
+    dev
+}
+
+
+dependencies {
+
+    // Logging
+    
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile("io.springfox:springfox-swagger2:${swaggerVersion}")
+    compile("io.springfox:springfox-swagger-ui:${swaggerVersion}")
+    compile('org.liquibase:liquibase-core')
+
+    compile "org.mockito:mockito-core:2.+"
+    compile("com.h2database:h2")
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+    implementation('io.jsonwebtoken:jjwt:0.9.0')
+
+
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly('org.postgresql:postgresql')
+
+
+    testCompile "io.mockk:mockk:${mockkVersion}"
+    testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
+    testCompile('org.mockito:mockito-junit-jupiter:2.18.3')
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.2.0')
+
+
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+
+
+}
+
+
+bootRun {
+    // Use Spring Boot DevTool only when we run Gradle bootRun task
+    classpath = sourceSets.main.runtimeClasspath + configurations.dev
+}
+
+
+
+
+
