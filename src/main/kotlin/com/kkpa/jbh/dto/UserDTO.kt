@@ -15,11 +15,11 @@ data class UserDTO(
     var password: String = EMPTY_STRING,
     val nickName: String = EMPTY_STRING,
     val roles: Set<Role> = emptySet(),
-    val createdAt: LocalDateTime? = null
+    val createdAt: LocalDateTime = LocalDateTime.now()
 ) : JbhDTO, DomainConverter<UserDTO, User> {
 
     override fun toDomain(): User {
-        return User(
+        var user = User(
             id = this.id,
             userName = this.userName,
             email = this.email,
@@ -27,5 +27,7 @@ data class UserDTO(
             nickName = this.nickName,
             roles = this.roles
         )
+        user.createdAt = this.createdAt;
+        return user;
     }
 }

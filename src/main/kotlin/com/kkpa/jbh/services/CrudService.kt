@@ -7,8 +7,8 @@ import com.kkpa.jbh.payload.ErrorsResponse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.validation.Validator
 import java.util.UUID
-import javax.validation.Validator
 
 @Component
 abstract class CrudService<T> {
@@ -78,16 +78,18 @@ abstract class CrudService<T> {
     @Throws(ConstraintViolationsException::class)
     private fun validateEntity(dto: T) {
         val dtoToValidate = (dto as DomainConverter<*, *>)
-        val constraintViolations = validator.validate(dtoToValidate.toDomain())
-        if (constraintViolations.isNotEmpty()) {
-            val errors = mutableSetOf<ErrorMessageResponse>()
-            constraintViolations.forEach {
-                with(it.message) {
-                    log.error(this)
-                    errors.add(ErrorMessageResponse(this))
+        val constraintViolations = dtoToValidate.toDomain()?.let { validator.validateObject(it) }
+        if (constraintViolations != null) {
+            if (constraintViolations.hasErrors()) {
+                val errors = mutableSetOf<ErrorMessageResponse>()
+                constraintViolations.allErrors.forEach {
+                    with(it.objectName) {
+                        log.error(this)
+                        errors.add(ErrorMessageResponse(this))
+                    }
                 }
+                throw ConstraintViolationsException(ErrorsResponse(errors))
             }
-            throw ConstraintViolationsException(ErrorsResponse(errors))
         }
     }
 }

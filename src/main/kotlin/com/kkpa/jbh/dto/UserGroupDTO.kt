@@ -12,7 +12,7 @@ data class UserGroupDTO(
     val id: UUID? = null,
     val name: String = DefaultValues.EMPTY_STRING,
     var single: Boolean = true,
-    var userOwner: UserDTO = UserDTO()
+    var userOwner: UserDTO? = null
 ) : JbhDTO, DomainConverter<UserGroupDTO, UsersGroup> {
 
     override fun toDomain(): UsersGroup {
@@ -20,7 +20,7 @@ data class UserGroupDTO(
             this.id,
             name = this.name,
             single = this.single,
-            userOwner = this.userOwner.toDomain()
+            userOwner = this.userOwner!!.toDomain()
         )
     }
 }

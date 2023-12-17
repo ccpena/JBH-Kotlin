@@ -9,8 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
-import javax.transaction.Transactional
+
 
 /**
  * To authenticate a User or perform various role-based checks, Spring security needs to load users details somehow.
@@ -53,10 +54,7 @@ class CustomUserDetailsService : UserDetailsService {
     @Transactional
     fun loadUserById(id: UUID): UserDetails {
         val userGroup = userGroupRepository.findByUserOwnerId(id)
-
-        if (userGroup == null) {
-            throw UsernameNotFoundException("User not found with id : " + id!!)
-        }
+            ?: throw UsernameNotFoundException("User not found with id : " + id!!)
 
         log.info("Loading User by Id... User Found! ${UserPrincipal.create(userGroup)}")
         return UserPrincipal.create(userGroup)

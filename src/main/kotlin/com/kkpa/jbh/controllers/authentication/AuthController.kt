@@ -1,4 +1,4 @@
-package com.kkpa.jbh.controllers.authentication
+﻿package com.kkpa.jbh.controllers.authentication
 
 import com.kkpa.jbh.controllers.Routes
 import com.kkpa.jbh.domain.Users.RoleName
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.Collections
 import java.util.UUID
-import javax.validation.Valid
+
 
 @RestController
 @RequestMapping(Routes.AUTH_PATH)
@@ -66,7 +66,7 @@ class AuthController {
     }
 
     @PostMapping("/signin")
-    fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<JwtAuthenticationResponse> {
+    fun authenticateUser( @RequestBody loginRequest: LoginRequest): ResponseEntity<JwtAuthenticationResponse> {
 
         val authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
@@ -82,7 +82,7 @@ class AuthController {
     }
 
     @PostMapping("/signup")
-    fun registerUser(@Valid @RequestBody signUpRequest: SignUpRequest): ResponseEntity<*> {
+    fun registerUser(@RequestBody signUpRequest: SignUpRequest): ResponseEntity<*> {
         if (userService.existsByNickName(signUpRequest.username)) {
             return ResponseEntity(
                 ApiResponse(false, "NickName is already taken!"),
@@ -114,7 +114,7 @@ class AuthController {
 
         // Saving default account
         val defaultAccountDTO = AccountsDTO(
-            description = "Default Account for ${userGroupCreated.userOwner.nickName}",
+            description = "Default Account for ${userGroupCreated.userOwner?.nickName}",
             userGroup = userGroupCreated
         )
 
@@ -122,7 +122,7 @@ class AuthController {
 
         val location = ServletUriComponentsBuilder
             .fromCurrentContextPath().path("/api/users/{username}")
-            .buildAndExpand(userGroupCreated.userOwner.nickName).toUri()
+            .buildAndExpand(userGroupCreated.userOwner?.nickName).toUri()
 
         return ResponseEntity.created(location).body<Any>(ApiResponse(true, "User registered successfully"))
     }

@@ -41,7 +41,7 @@ class UserGroupServiceImpl(
     }
 
     override fun updateOperation(dto: UserGroupDTO): UserGroupDTO {
-        val userUpdatedDTO = userService.update(dto.userOwner)
+        val userUpdatedDTO = dto.userOwner?.let { userService.update(it) }
         dto.userOwner = userUpdatedDTO
 
         return userGroupRepository.save(dto.toDomain()).toDTO()
@@ -67,10 +67,12 @@ class UserGroupServiceImpl(
 
     override fun saveOperation(userGroupDTO: UserGroupDTO): UserGroupDTO {
         val userOwnerDTO = userGroupDTO.userOwner
-        if (userOwnerDTO.id == null) {
-            log.info("Saving User: ${userGroupDTO.userOwner}")
-            userService.save(userOwnerDTO).let {
-                userGroupDTO.userOwner = it
+        if (userOwnerDTO?.id == null) {
+            log.info("Saving User: ${userGroupDTO.userOwner?.email}")
+            if (userOwnerDTO != null) {
+                userService.save(userOwnerDTO).let {
+                    userGroupDTO.userOwner = it
+                }
             }
         }
 
@@ -81,9 +83,9 @@ class UserGroupServiceImpl(
     }
 
     private fun findByUserOwnerAndSingle(userGroupDTO: UserGroupDTO): UsersGroup? {
-        val userOwner = userGroupDTO.userOwner.toDomain()
+        val userOwner = userGroupDTO.userOwner?.toDomain()
 
-        if (userOwner.id == null) return null
+        if (userOwner?.id == null) return null
 
         return userGroupRepository.findByUserOwnerAndSingle(userOwner, single = true)
     }

@@ -2,13 +2,13 @@ package com.kkpa.jbh.domain.categories
 
 import com.kkpa.jbh.domain.AuditModel
 import com.kkpa.jbh.util.DefaultValues
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 
 const val SUB_CATEGORY_DEFAULT_NAME = "CUSTOM SUBCATEGORY FROM CUSTOM CATEGORY"
 

@@ -1,11 +1,14 @@
 package com.kkpa.jbh
 
+import jakarta.annotation.PostConstruct
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import java.util.TimeZone
-import javax.annotation.PostConstruct
 
+
+@EnableJpaAuditing
 @SpringBootApplication
 @EnableJpaRepositories
 class JbhApplication {

@@ -47,8 +47,9 @@ class UserServiceImpl(
     }
 
     override fun saveOperation(userDTO: UserDTO): UserDTO {
-        userDTO.password = passwordEncoder.encode(userDTO.password)
-        return userRepository.save(userDTO.toDomain()).toDTO()
+        log.warn("Verifying Password...")
+        var userToSave = userDTO.toDomain();
+        return userRepository.save(userToSave).toDTO()
     }
 
     override fun validateUpdateOperation(dto: UserDTO) {

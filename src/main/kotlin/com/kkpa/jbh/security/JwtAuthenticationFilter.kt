@@ -7,9 +7,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 /**
  * We’ll use JWTAuthenticationFilter to implement a filter that -
@@ -32,16 +32,12 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     /**
      * We’re first parsing the JWT retrieved from the Authorization header of the request and obtaining the user’s Id. After that,
      * We’re loading the user’s details from the database and setting the authentication inside spring security’s context.
-     *
-     *
-     *
      */
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        // TODO Figure out why SecurityConfig is not working, or centralize it for a while.
 
         if (!request.requestURI.startsWith("/jbh/auth/")) {
 

@@ -15,7 +15,8 @@ import java.util.Date
 import java.util.UUID
 
 /**
- * The following utility class will be used for generating a JWT after a user logs in successfully, and validating the JWT sent in the Authorization header of the requests -
+ * The following utility class will be used for generating a JWT after a user logs in successfully,
+ * and validating the JWT sent in the Authorization header of the requests -
  */
 @Component
 class JwtTokenProvider {
