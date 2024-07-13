@@ -63,7 +63,11 @@ class SecurityConfig  () {
         return WebSecurityCustomizer { web: WebSecurity ->
             web.debug(securityDebug)
                 .ignoring()
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico",
+                .requestMatchers(
+                    "/css/**",
+                    "/js/**",
+                    "/img/**",
+                    "/images/**",
                     "/",
                     "/favicon.ico",
                     "/**/*.png",

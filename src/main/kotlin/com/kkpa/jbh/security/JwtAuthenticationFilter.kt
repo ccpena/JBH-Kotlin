@@ -38,22 +38,15 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-
         logger.info("Request URI: ${request.requestURI}")
 
-        if (!request.requestURI.startsWith("/jbh/auth/") && !request.requestURI.startsWith("/jbh/view/auth")) {
-
+        // Exclude static resources and public endpoints
+        if (!isPublicEndpoint(request.requestURI) && !isStaticResource(request.requestURI)) {
             try {
                 val jwt = getJwtFromRequest(request)
 
                 if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                     val userId = tokenProvider.getUserIdFromJWT(jwt)
-
-                    /*
-                        Note that you could also encode the user's username and roles inside JWT claims
-                        and create the UserDetails object by parsing those claims from the JWT.
-                        That would avoid the following database hit. It's completely up to you.
-                     */
                     val userDetails = customUserDetailsService.loadUserById(userId!!)
                     val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
                     authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
@@ -65,6 +58,15 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             }
         }
         filterChain.doFilter(request, response)
+    }
+
+    private fun isPublicEndpoint(uri: String): Boolean {
+        return uri.startsWith("/jbh/auth/") || uri.startsWith("/jbh/view/auth")
+    }
+
+    private fun isStaticResource(uri: String): Boolean {
+        val staticPaths = listOf("/js/", "/css/", "/images/", "/webjars/")
+        return staticPaths.any { uri.contains(it) }
     }
 
     private fun getJwtFromRequest(request: HttpServletRequest): String {

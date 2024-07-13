@@ -30,15 +30,20 @@ class JBHAuthorizationCustomizer(
         "/checkService ",
         "/configuration/ui",
         "/configuration/security",
+        "/static/**",
+        "/js/**",
+        "/css/**",
+        "/images/**",
         "/webjars/**"
     ) // other public endpoints of your API may be appended to this array
     override fun customize(registry: AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry) {
-        registry.requestMatchers(*AUTH_WHITELIST)
+        registry.requestMatchers(*AUTH_WHITELIST).permitAll()
         registry.requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
         registry.requestMatchers("/user/**").hasAuthority("ROLE_USER")
         registry.requestMatchers("/jbh/auth/**").permitAll()
         registry.requestMatchers("/auth/**").permitAll()
         registry.requestMatchers("/view/**").permitAll()
+
         registry.requestMatchers(HttpMethod.GET, "/party-deserialization/**").permitAll()
         registry.anyRequest().authenticated()
     }

@@ -118,7 +118,13 @@ class AuthController {
             userGroup = userGroupCreated
         )
 
-        accountServiceImpl.save(defaultAccountDTO)
+        try {
+            accountServiceImpl.save(defaultAccountDTO)
+        }catch (e: Exception){
+            log.error("Error creating the account", e)
+            return ResponseEntity.badRequest().body<Any>(ApiResponse(false, "Error creating the account"))
+        }
+
 
         val location = ServletUriComponentsBuilder
             .fromCurrentContextPath().path("/api/users/{username}")
@@ -127,22 +133,6 @@ class AuthController {
         return ResponseEntity.created(location).body<Any>(ApiResponse(true, "User registered successfully"))
     }
 
-    @GetMapping("/register")
-    fun registerLock(@RequestParam(value = "id") id: String): String {
-        val value = id
-        log.info("Registering $id")
-        LockedEntities.push(UUID.randomUUID().toString())
-        log.warn("This endpoint should be removed")
-        log.debug("Debuggin...")
-        log.error("OK Error, come on!")
-
-        log.trace("doStuff needed more information - {}", value)
-        log.debug("doStuff needed to debug - {}", value)
-        log.info("doStuff took input - {}", value)
-        log.warn("doStuff needed to warn - {}", value)
-        log.error("doStuff encountered an error with value - {}", value)
-        return "OK"
-    }
 
     @GetMapping("/checkUsernameAvailability")
     fun checkUsernameAvailability(@RequestParam(value = "nickName") nickName: String): ResponseEntity<UserIdentityAvailabilityResponse> {

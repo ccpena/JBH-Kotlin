@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Register 2</title>
-    <script src="/jbh/js/htmx/2.0.1/htmx.min.js"></script>
+    <script src="/jbh/js/htmx/latest/htmx.min.js"></script>
 </head>
 <body>
 <h2>Register</h2>
-<form hx-post="/view/auth/register"
+<form hx-post="/jbh/view/auth/register"
       hx-target="#registration-result">
     <div>
         <label for="name">Name:</label>
@@ -15,7 +15,7 @@
     <div>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required minlength="3" maxlength="15"
-               hx-get="/view/auth/check-username"
+               hx-get="/jbh/view/auth/check-username"
                hx-trigger="change"
                hx-target="#username-availability">
         <span id="username-availability"></span>
@@ -23,7 +23,7 @@
     <div>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required maxlength="40"
-               hx-get="/view/auth/check-email"
+               hx-get="/jbh/view/auth/check-email"
                hx-trigger="change"
                hx-target="#email-availability">
         <span id="email-availability"></span>
@@ -34,6 +34,8 @@
     </div>
     <button type="submit">Register</button>
 </form>
-<div id="registration-result"></div>
+<div id="registration-result" th:fragment="registration-result">
+    <p th:text="${registrationResult}">Registration result will appear here.</p>
+</div>
 </body>
 </html>
