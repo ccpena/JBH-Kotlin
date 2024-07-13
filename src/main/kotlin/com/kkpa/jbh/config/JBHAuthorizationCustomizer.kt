@@ -9,6 +9,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer
 import org.springframework.stereotype.Component
 
+/**
+ * JBHAuthorizationCustomizer.kt:
+ *
+ * This class customizes the authorization rules for your application.
+ */
 @Component
 class JBHAuthorizationCustomizer(
 ):
@@ -33,6 +38,7 @@ class JBHAuthorizationCustomizer(
         registry.requestMatchers("/user/**").hasAuthority("ROLE_USER")
         registry.requestMatchers("/jbh/auth/**").permitAll()
         registry.requestMatchers("/auth/**").permitAll()
+        registry.requestMatchers("/view/**").permitAll()
         registry.requestMatchers(HttpMethod.GET, "/party-deserialization/**").permitAll()
         registry.anyRequest().authenticated()
     }

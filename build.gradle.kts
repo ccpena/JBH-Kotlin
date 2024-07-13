@@ -20,6 +20,12 @@ repositories {
 }
 
 dependencies {
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	runtimeOnly("com.h2database:h2")
+	runtimeOnly("org.postgresql:postgresql")
+
+
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.liquibase:liquibase-core")
@@ -27,16 +33,15 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation ("org.hibernate:hibernate-core:6.1.7.Final")
 	implementation("org.springframework.boot:spring-boot-starter-security") {
-	version {
-		strictly("2.7.7")
+		version {
+			strictly("2.7.7")
+		}
 	}
-}
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	runtimeOnly("com.h2database:h2")
-	runtimeOnly("org.postgresql:postgresql")
+
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.springframework.security:spring-security-web:6.2.0") // New Spring Security Config
@@ -45,6 +50,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	implementation("org.springdoc:springdoc-openapi-security:1.6.15") //swagger
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
 }
 
 tasks.withType<KotlinCompile> {

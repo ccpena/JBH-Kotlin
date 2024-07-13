@@ -5,16 +5,16 @@ import com.kkpa.jbh.dto.AccountsDTO
 import com.kkpa.jbh.repositories.accounts.AccountRepository
 import com.kkpa.jbh.services.CrudService
 import com.kkpa.jbh.services.users.UserGroupServiceImpl
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
 class AccountServiceImpl(
-    private val accountRepository: AccountRepository,
-    private val userGroupServiceImpl: UserGroupServiceImpl
-) : CrudService<AccountsDTO>(),
-    AccountService {
+    @Autowired private val accountRepository: AccountRepository,
+    @Autowired private val userGroupServiceImpl: UserGroupServiceImpl
+) : CrudService<AccountsDTO>(), AccountService {
 
     override fun validateSaveOperation(dto: AccountsDTO) {
         if (isNewAndUnique(dto).not()) throw IllegalArgumentException("Account needs to be updated.")

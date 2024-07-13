@@ -39,7 +39,9 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
 
-        if (!request.requestURI.startsWith("/jbh/auth/")) {
+        logger.info("Request URI: ${request.requestURI}")
+
+        if (!request.requestURI.startsWith("/jbh/auth/") && !request.requestURI.startsWith("/jbh/view/auth")) {
 
             try {
                 val jwt = getJwtFromRequest(request)
@@ -67,6 +69,10 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
 
     private fun getJwtFromRequest(request: HttpServletRequest): String {
         val bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION)
+        if (bearerToken == null) {
+            logger.error("Authorization header is missing in the request for URI: ${request.requestURI}")
+            throw IllegalArgumentException("Request not valid")
+        }
         bearerToken.startsWith("Bearer ").let {
             return bearerToken.substring(7, bearerToken.length)
         }

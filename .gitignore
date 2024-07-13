@@ -1,0 +1,44 @@
+# IDE Specific
+.idea/
+*.iml
+.ideaModule.xml
+
+# Build artifacts
+target/
+build/
+*.class
+*.jar
+*.gen
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+tmp/
+
+# IDE caches
+.DS_Store
+
+# Local Environment Variables
+.env
+
+# Generated documentation
+**/build/docs/
+
+
+# Other
+**/.nyc_output/
+**/coverage/
+.idea_workspace.xml
+
+# Exclude all dot files except those listed.
+.**
+!README.md
+!HELP.md
+!LICENSE*
+!*.yaml
+!*.xml
+!*.properties
+!*.json

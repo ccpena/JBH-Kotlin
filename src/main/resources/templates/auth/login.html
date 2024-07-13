@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <script src="/js/htmx-2.0.1/htmx.min.js"></script>
+</head>
+<body>
+<h1>Login</h1>
+<button hx-get="/auth/register" hx-target="#main-content">Register</button>
+<!-- Login form can be added here -->
+<div id="main-content"></div>
+</body>
+</html>

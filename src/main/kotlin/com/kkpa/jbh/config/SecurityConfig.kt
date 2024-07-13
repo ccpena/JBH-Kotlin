@@ -6,9 +6,7 @@ import com.kkpa.jbh.security.JwtAuthenticationFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -16,8 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -31,7 +27,7 @@ import java.util.*
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity // This is the primary spring security annotation that is used to enable web security in a project.
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true) // : Enables annotation-based security (like @PreAuthorize).
 class SecurityConfig  () {
 
     var securityDebug = false
@@ -52,7 +48,7 @@ class SecurityConfig  () {
     @Throws(Exception::class)
     fun authenticationManager(
         http: HttpSecurity,
-        bCryptPasswordEncoder: PasswordEncoder?,
+        bCryptPasswordEncoder: BCryptPasswordEncoder?,
         userDetailService: CustomUserDetailsService?
     ): AuthenticationManager? {
         return http.getSharedObject<AuthenticationManagerBuilder>(AuthenticationManagerBuilder::class.java)
@@ -100,10 +96,9 @@ class SecurityConfig  () {
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
+    fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
-
     @Bean
     fun jwtAuthenticationFilter(): JwtAuthenticationFilter {
         return JwtAuthenticationFilter()
