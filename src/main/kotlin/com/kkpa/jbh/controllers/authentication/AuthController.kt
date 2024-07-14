@@ -16,7 +16,8 @@ import com.kkpa.jbh.security.JwtTokenProvider
 import com.kkpa.jbh.services.accounts.AccountServiceImpl
 import com.kkpa.jbh.services.users.UserGroupServiceImpl
 import com.kkpa.jbh.services.users.UserServiceImpl
-import com.kkpa.jbh.trying.LockedEntities
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -61,23 +62,42 @@ class AuthController {
     @Autowired
     lateinit var accountServiceImpl: AccountServiceImpl
 
+
     companion object {
         private val log = LoggerFactory.getLogger(AuthController::class.java)
+        const val JBH_TOKEN_COOKIE_NAME = "JBH_TOKEN"
     }
 
     @PostMapping("/signin")
-    fun authenticateUser( @RequestBody loginRequest: LoginRequest): ResponseEntity<JwtAuthenticationResponse> {
+    fun authenticateUser( @RequestBody loginRequest: LoginRequest, response: HttpServletResponse): ResponseEntity<JwtAuthenticationResponse> {
 
         val authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 loginRequest.usernameOrEmail,
-                loginRequest.password!!.trim()
+                loginRequest.password
             )
         )
 
         SecurityContextHolder.getContext().authentication = authentication
 
         val jwt = tokenProvider.generateToken(authentication)
+        val cookie = Cookie(JBH_TOKEN_COOKIE_NAME, jwt)
+        cookie.isHttpOnly = true
+        cookie.maxAge = 3600
+        cookie.path = "/"
+        // SameSite is set to Strict to prevent CSRF attacks
+        cookie.setAttribute("SameSite", "Strict")
+
+        // For CSRF protection, Implement Spring Security CSRF Token
+
+        // In production, we should use a secure cookie
+        // cookie.secure = true
+
+        response.addCookie(cookie)
+
+        log.info("Cookie has been added to the response")
+
+
         return ResponseEntity.ok<JwtAuthenticationResponse>(JwtAuthenticationResponse(jwt))
     }
 

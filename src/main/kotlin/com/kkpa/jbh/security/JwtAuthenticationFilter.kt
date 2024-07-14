@@ -1,5 +1,6 @@
 package com.kkpa.jbh.security
 
+import com.kkpa.jbh.controllers.authentication.AuthController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -29,6 +30,8 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
 
+
+
     /**
      * We’re first parsing the JWT retrieved from the Authorization header of the request and obtaining the user’s Id. After that,
      * We’re loading the user’s details from the database and setting the authentication inside spring security’s context.
@@ -43,21 +46,33 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         // Exclude static resources and public endpoints
         if (!isPublicEndpoint(request.requestURI) && !isStaticResource(request.requestURI)) {
             try {
-                val jwt = getJwtFromRequest(request)
 
-                if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                    val userId = tokenProvider.getUserIdFromJWT(jwt)
-                    val userDetails = customUserDetailsService.loadUserById(userId!!)
-                    val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-                    authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                val jwtFromCookie = getJwtFromCookie(request)
+                logger.info("JWT from cookie: $jwtFromCookie")
 
-                    SecurityContextHolder.getContext().authentication = authentication
+                if (jwtFromCookie != null) {
+                    authenticateUserByJwt(request, jwtFromCookie)
+                }else {
+                    throw IllegalArgumentException("Request Invalid")
                 }
+
             } catch (ex: Exception) {
                 logger.error("Could not set user authentication in security context", ex)
+                throw IllegalArgumentException("Request not valid")
             }
         }
         filterChain.doFilter(request, response)
+    }
+
+    private fun authenticateUserByJwt(request: HttpServletRequest, jwt: String) {
+        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            val userId = tokenProvider.getUserIdFromJWT(jwt)
+            val userDetails = customUserDetailsService.loadUserById(userId!!)
+            val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+            authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+            logger.info("User Authenticated: ${authentication.name}")
+            SecurityContextHolder.getContext().authentication = authentication
+        }
     }
 
     private fun isPublicEndpoint(uri: String): Boolean {
@@ -69,6 +84,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         return staticPaths.any { uri.contains(it) }
     }
 
+    @Deprecated("Use getJwtFromCookie instead")
     private fun getJwtFromRequest(request: HttpServletRequest): String {
         val bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION)
         if (bearerToken == null) {
@@ -78,5 +94,10 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         bearerToken.startsWith("Bearer ").let {
             return bearerToken.substring(7, bearerToken.length)
         }
+    }
+
+    private fun getJwtFromCookie(request: HttpServletRequest): String? {
+        val cookies = request.cookies
+        return cookies?.find { it.name == AuthController.JBH_TOKEN_COOKIE_NAME }?.value
     }
 }

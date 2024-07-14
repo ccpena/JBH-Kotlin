@@ -1,7 +1,9 @@
 package com.kkpa.jbh.web.views
 
+import com.kkpa.jbh.payload.LoginRequest
 import com.kkpa.jbh.payload.SignUpRequest
 import com.kkpa.jbh.web.service.AuthService
+import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
@@ -20,6 +22,29 @@ class AuthViewController(private val authService: AuthService) {
     fun loginPage(): String {
         // References to templates folder from resources folder
         return "auth/login"
+    }
+
+    @PostMapping("/signin")
+    fun loginUser(@ModelAttribute signInRequest: LoginRequest,
+                  model: Model,
+                  response: HttpServletResponse
+    ): String {
+        try {
+            val (result, jwtCookie) = authService.loginUser(signInRequest)
+            model.addAttribute("loginResult", result)
+            log.info("Login result: $result with cookies: $jwtCookie")
+
+            // Set the cookies in the response
+            if (jwtCookie.isNotBlank()) {
+                response.addHeader("Set-Cookie", jwtCookie)
+            }
+
+            return "auth/login :: #login-result"
+        }catch (e: Exception) {
+            log.error("Login failed", e)
+            model.addAttribute("loginResult", "Login failed: ${e.message}")
+            return "auth/login :: #login-result"
+        }
     }
 
     @GetMapping("/register")
