@@ -14,10 +14,13 @@ dependencies {
     implementation(project(":jbh-iam-common"))
     implementation(project(":jbh-iam-security"))
     implementation("org.liquibase:liquibase-core")
+    // Spring Boot Starter Validation (includes both the Bean Validation API and Hibernate Validator)
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation ("org.hibernate:hibernate-core:6.1.7.Final")
+    implementation("org.hibernate:hibernate-core:6.1.7.Final")
     // Add other API-related dependencies
+
 
     runtimeOnly("org.postgresql:postgresql")
 }
