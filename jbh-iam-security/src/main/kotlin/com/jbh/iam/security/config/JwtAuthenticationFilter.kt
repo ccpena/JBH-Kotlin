@@ -1,6 +1,8 @@
-package com.jbh.iam.security.model
+package com.jbh.iam.security.config
 
 import com.jbh.iam.common.config.JBHConstants.JBH_TOKEN_COOKIE_NAME
+import com.jbh.iam.security.model.CustomUserDetailsService
+import com.jbh.iam.security.model.JwtTokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -45,6 +47,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         // Exclude static resources and public endpoints
         if (!isPublicEndpoint(request.requestURI) && !isStaticResource(request.requestURI)) {
             try {
+                logger.info("Getting JWT from cookie")
                 getJwtFromCookie(request)?.let {
                     logger.info("JWT from cookie: $it")
                     authenticateUserByJwt(request, it)
@@ -54,6 +57,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                 throw IllegalArgumentException("Request not valid")
             }
         }
+        logger.info("Filter chain executed")
         filterChain.doFilter(request, response)
     }
 
@@ -69,6 +73,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     }
 
     private fun isPublicEndpoint(uri: String): Boolean {
+        logger.info("Checking if $uri is public endpoint")
         return uri.startsWith("/jbh/auth/") || uri.startsWith("/jbh/view/auth")
     }
 

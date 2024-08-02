@@ -25,7 +25,7 @@ class JwtTokenProvider {
     var logger = LoggerFactory.getLogger(JwtTokenProvider::class.java)
 
     fun generateToken(authentication: Authentication): String {
-
+        logger.info("Generating JWT Token...")
         val userPrincipal: UserPrincipal = authentication.getPrincipal() as UserPrincipal
 
         val now = Instant.now()
@@ -40,6 +40,7 @@ class JwtTokenProvider {
     }
 
     fun getUserIdFromJWT(token: String): UUID? {
+        logger.info("Getting User Id from JWT...")
         val claims = Jwts.parser()
             .setSigningKey(jwtSecret)
             .parseClaimsJws(token)
@@ -49,6 +50,7 @@ class JwtTokenProvider {
     }
 
     fun validateToken(authToken: String): Boolean {
+        logger.info("Validating JWT Token...")
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
             return true

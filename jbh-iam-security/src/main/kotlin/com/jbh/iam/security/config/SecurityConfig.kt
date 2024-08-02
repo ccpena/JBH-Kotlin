@@ -2,7 +2,7 @@ package com.jbh.iam.security.config
 
 
 import com.jbh.iam.security.model.CustomUserDetailsService
-import com.jbh.iam.security.model.JwtAuthenticationFilter
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -36,10 +36,11 @@ class SecurityConfig() {
     var securityDebug = false
 
     @Autowired
-    lateinit var customUserDetailsService: CustomUserDetailsService
-
-    @Autowired
     lateinit var jbhAuthorization: JBHAuthorizationCustomizer
+
+    companion object {
+        private val log = LoggerFactory.getLogger(SecurityConfig::class.java)
+    }
 
 
     @Bean
@@ -49,6 +50,7 @@ class SecurityConfig() {
         bCryptPasswordEncoder: BCryptPasswordEncoder?,
         userDetailService: CustomUserDetailsService?
     ): AuthenticationManager? {
+        log.info("Creating authentication manager")
         return http.getSharedObject<AuthenticationManagerBuilder>(AuthenticationManagerBuilder::class.java)
             .userDetailsService<CustomUserDetailsService>(userDetailService)
             .passwordEncoder(bCryptPasswordEncoder)
@@ -58,6 +60,7 @@ class SecurityConfig() {
 
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer? {
+        log.info("Creating web security customizer")
         return WebSecurityCustomizer { web: WebSecurity ->
             web.debug(securityDebug)
                 .ignoring()
@@ -83,6 +86,7 @@ class SecurityConfig() {
     @Bean
     @Throws(java.lang.Exception::class)
     fun filterChain(http: HttpSecurity, authnManager: AuthenticationManager?): SecurityFilterChain? {
+        log.info("Security Filter Chain is being created")
         http
             .csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
             .authorizeHttpRequests(jbhAuthorization)
@@ -93,6 +97,8 @@ class SecurityConfig() {
                     SessionCreationPolicy.STATELESS
                 )
             }
+
+
 
         return http.build()
     }

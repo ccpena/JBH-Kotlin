@@ -1,5 +1,6 @@
 package com.jbh.iam.security.config
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Component
 class JBHAuthorizationCustomizer(
 ) :
     Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(JBHAuthorizationCustomizer::class.java)
+    }
 
     private val AUTH_WHITELIST = arrayOf(
         // -- swagger ui
@@ -35,6 +40,8 @@ class JBHAuthorizationCustomizer(
     ) // other public endpoints of your API may be appended to this array
 
     override fun customize(registry: AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry) {
+
+        log.info("Registering authorization rules")
         registry.requestMatchers(*AUTH_WHITELIST).permitAll()
         registry.requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
         registry.requestMatchers("/user/**").hasAuthority("ROLE_USER")

@@ -45,7 +45,14 @@ class AuthService(private val restTemplate: RestTemplate) {
 
     fun checkEmailAvailability(email: String): Boolean {
         val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()
-        val response = restTemplate.getForEntity(baseUrl + "/auth/checkEmailAvailability?email=$email", Map::class.java)
-        return response.body?.get("available") as Boolean? ?: false
+        try {
+            val response =
+                restTemplate.getForEntity(baseUrl + "/auth/checkEmailAvailability?email=$email", Map::class.java)
+            return response.body?.get("available") as Boolean? ?: false
+        } catch (e: Exception) {
+            log.error("Error while checking email availability", e)
+            e.printStackTrace()
+        }
+        return false
     }
 }

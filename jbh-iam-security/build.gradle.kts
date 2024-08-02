@@ -1,4 +1,6 @@
 dependencies {
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    
     implementation(project(":jbh-iam-common"))
     implementation(project(":jbh-iam-core"))
     implementation("org.springframework.boot:spring-boot-starter-web")

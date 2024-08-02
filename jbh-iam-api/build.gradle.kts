@@ -11,9 +11,14 @@ tasks.getByName<Jar>("jar") {
 }
 
 dependencies {
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    
     implementation(project(":jbh-iam-common"))
     implementation(project(":jbh-iam-security"))
     implementation("org.liquibase:liquibase-core")
+    // Actuator to check which endpoints are available
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     // Spring Boot Starter Validation (includes both the Bean Validation API and Hibernate Validator)
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
