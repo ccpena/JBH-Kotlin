@@ -19,6 +19,7 @@ import org.springframework.security.config.annotation.web.configurers.SessionMan
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.access.intercept.AuthorizationFilter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.util.*
 
@@ -36,13 +37,28 @@ class SecurityConfig() {
     var securityDebug = false
 
     @Autowired
-    lateinit var jbhAuthorization: JBHAuthorizationCustomizer
+    lateinit var jbhAuthorizer: JBHAuthorizationCustomizer
 
     companion object {
         private val log = LoggerFactory.getLogger(SecurityConfig::class.java)
     }
 
 
+    /**
+     * The Authentication Manager is responsible for validating user credentials.
+     * It is used to authenticate users and provide them with a security context.
+     * Configures and creates the AuthenticationManager bean.
+     *
+     * This method sets up the core authentication process for Spring Security.
+     * It integrates the custom UserDetailsService and BCrypt password encoder
+     * into the authentication flow.
+     *
+     * @param http The HttpSecurity object to get the shared AuthenticationManagerBuilder
+     * @param bCryptPasswordEncoder The password encoder to use for password hashing
+     * @param userDetailService The custom service to load user-specific data
+     * @return The configured AuthenticationManager
+     * @throws Exception If there's an error during AuthenticationManager creation
+     */
     @Bean
     @Throws(Exception::class)
     fun authenticationManager(
@@ -58,6 +74,19 @@ class SecurityConfig() {
             .build()
     }
 
+
+    /**
+     *
+     * The webSecurityCustomizer bean you've shown is primarily designed to handle static web resources
+     **
+     * It configures Spring Security to ignore certain paths, typically used for static resources.
+     * This allows public access to resources like CSS, JavaScript, images, and HTML files without going through the security filters.
+     * It also allows the application to serve these resources directly without going through the security filters.
+     *
+     * This is useful for configurations that need to be applied before the main security filter chain.
+     * @see JwtAuthenticationFilter::doFilterInternal and filterChain
+     *
+     */
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer? {
         log.info("Creating web security customizer")
@@ -83,24 +112,55 @@ class SecurityConfig() {
     }
 
 
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * This method sets up the main security configuration, including:
+     * - Disabling CSRF protection
+     * - Applying custom authorization rules
+     * - Adding a JWT authentication filter
+     * - Configuring stateless session management
+     *
+     * @param http The HttpSecurity object to configure
+     * @return The configured SecurityFilterChain
+     * @throws Exception If there's an error during configuration
+     */
     @Bean
     @Throws(java.lang.Exception::class)
-    fun filterChain(http: HttpSecurity, authnManager: AuthenticationManager?): SecurityFilterChain? {
+    fun filterChain(http: HttpSecurity): SecurityFilterChain? {
         log.info("Security Filter Chain is being created")
         http
             .csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
-            .authorizeHttpRequests(jbhAuthorization)
-            .authenticationManager(authnManager)
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+            .authorizeHttpRequests(jbhAuthorizer)
+            .addFilterBefore(
+                jwtAuthenticationFilter(),
+                UsernamePasswordAuthenticationFilter::class.java
+            ) // Adding to the chain.
             .sessionManagement { session: SessionManagementConfigurer<HttpSecurity?> ->
                 session.sessionCreationPolicy(
                     SessionCreationPolicy.STATELESS
                 )
             }
 
+        val filterChain = http.build()
 
+        // Inspect the filter chain
+        filterChain.filters.forEach { filter ->
+            log.info("Filter found: ${filter.javaClass.simpleName}")
+            when (filter) {
 
-        return http.build()
+                is AuthorizationFilter -> {
+                    val accessDecisionManager = filter.authorizationManager
+                    val securityMetadataSource = filter.isObserveOncePerRequest
+                    // Log or inspect these components
+                    log.info("FilterSecurityInterceptor found with AccessDecisionManager: ${accessDecisionManager.javaClass.simpleName}")
+                    log.info("Security metadata source: ${securityMetadataSource.javaClass.simpleName}")
+                }
+                // You can add more specific checks for other filters
+            }
+        }
+
+        return filterChain
     }
 
     @Bean

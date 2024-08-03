@@ -1,16 +1,17 @@
 package com.jbh.iam.security.facade
 
+import com.jbh.iam.core.security.IPasswordEncoder
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
-class PasswordEncoderJBH {
+class PasswordEncoderJBH : IPasswordEncoder {
     @Autowired
-    lateinit var passwordEncoder: PasswordEncoder
+    lateinit var passwordEncoder: BCryptPasswordEncoder
 
 
-    fun encode(password: String): String {
+    override fun encode(password: String): String {
         return passwordEncoder.encode(password)
     }
 

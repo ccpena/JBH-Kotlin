@@ -1,10 +1,15 @@
 package com.jbh.iam.api.services.users
 
+import com.jbh.iam.api.domain.Users.User
 import com.jbh.iam.api.domain.toDTOList
 import com.jbh.iam.api.dto.UserDTO
 import com.jbh.iam.api.exceptions.web.ResourceNotFoundException
+import com.jbh.iam.api.repositories.users.UserGroupRepository
 import com.jbh.iam.api.repositories.users.UserRepository
 import com.jbh.iam.api.services.CrudService
+import com.jbh.iam.core.facade.UserCore
+import com.jbh.iam.core.facade.UserGroupCore
+import com.jbh.iam.core.facade.UserRole
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,7 +18,8 @@ import java.util.*
 @Service
 @Transactional
 class UserServiceImpl(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userGroupRepository: UserGroupRepository
 ) : CrudService<UserDTO>(), UserService {
 
 
@@ -104,6 +110,44 @@ class UserServiceImpl(
 
     override fun existsByEmail(email: String): Boolean {
         return userRepository.existsByEmail(email)
+    }
+
+    override fun findByNickNameOrEmail(nickName: String, email: String): UserCore? {
+        val user = userRepository.findByNickNameOrEmail(nickName, email)
+            ?: throw IllegalArgumentException("User not found with username or email $email")
+        log.info("loading user by userName... User Found! ${user.nickName}")
+
+        return mapUserToCore(user)
+    }
+
+    private fun mapUserToCore(user: User): UserCore {
+        val userRoles = user.roles.map { UserRole(it.id, it.name) }.toSet()
+
+        val userCore = UserCore(
+            id = user.id,
+            userName = user.userName,
+            email = user.email,
+            nickName = user.nickName,
+            password = user.password,
+            roles = userRoles
+        )
+        return userCore
+    }
+
+
+    override fun findByUserOwnerId(id: UUID): UserGroupCore? {
+        val userGroup = userGroupRepository.findByUserOwnerId(id)
+            ?: throw IllegalArgumentException("User not found with id : $id")
+
+        val userGroupCore = UserGroupCore(
+            id = userGroup.id,
+            name = userGroup.name,
+            single = userGroup.single,
+            userOwner = mapUserToCore(userGroup.userOwner),
+        )
+        log.info("loading user by ownerId... User Found! ${userGroup.userOwner?.nickName}")
+
+        return userGroupCore
     }
 
     fun findByNickName(nickName: String): UserDTO {

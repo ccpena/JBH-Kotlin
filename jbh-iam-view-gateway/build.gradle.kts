@@ -6,6 +6,7 @@ tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar
 
 dependencies {
     implementation(project(":jbh-iam-common"))
+    implementation(project(":jbh-iam-api"))
     implementation(project(":jbh-iam-security"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")

@@ -4,6 +4,7 @@ import com.jbh.iam.api.domain.AuditModel
 import com.jbh.iam.api.domain.DTOConverter
 import com.jbh.iam.api.dto.UserDTO
 import com.jbh.iam.api.util.DefaultValues
+import com.jbh.iam.core.facade.RoleName
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotEmpty

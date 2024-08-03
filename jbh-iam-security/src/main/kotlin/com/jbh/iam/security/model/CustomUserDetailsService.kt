@@ -1,7 +1,7 @@
 package com.jbh.iam.security.model
 
+import com.jbh.iam.core.access.UserDataAccess
 import com.jbh.iam.core.facade.UserPrincipal
-import com.jbh.iam.core.facade.UsersFacade
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +26,7 @@ In our implementation, We’ll also define a custom UserPrincipal class that wil
 class CustomUserDetailsService : UserDetailsService {
 
     @Autowired
-    lateinit var usersFacade: UsersFacade
+    lateinit var userDataAccess: UserDataAccess
 
     companion object {
         val log: Logger = LoggerFactory.getLogger(CustomUserDetailsService::class.java)
@@ -37,7 +37,7 @@ class CustomUserDetailsService : UserDetailsService {
      */
     override fun loadUserByUsername(userNameOrEmail: String): UserDetails {
         log.info("loading user by userName...  ${userNameOrEmail}")
-        val user = usersFacade.findByNickNameOrEmail(userNameOrEmail, userNameOrEmail)
+        val user = userDataAccess.findByNickNameOrEmail(userNameOrEmail, userNameOrEmail)
             ?: throw UsernameNotFoundException("User not found with username or email $userNameOrEmail")
 
         log.info("loading user by userName... User Found! ${user.nickName}  ${user.email}")
@@ -51,7 +51,7 @@ class CustomUserDetailsService : UserDetailsService {
      */
     fun loadUserById(id: UUID): UserDetails {
         log.info("Loading User by Id... ${id}")
-        val userGroup = usersFacade.findByUserOwnerId(id)
+        val userGroup = userDataAccess.findByUserOwnerId(id)
             ?: throw UsernameNotFoundException("User not found with id : " + id!!)
 
         log.info("Loading User by Id... User Found! ${UserPrincipal.create(userGroup)}")

@@ -7,14 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer
 import org.springframework.stereotype.Component
 
-/**
- * JBHAuthorizationCustomizer.kt:
- *
- * This class customizes the authorization rules for your application.
- */
 @Component
-class JBHAuthorizationCustomizer(
-) :
+class JBHAuthorizationCustomizer :
     Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> {
 
     companion object {
@@ -27,9 +21,9 @@ class JBHAuthorizationCustomizer(
         "/swagger-resources/**",
         "/swagger-ui/**",
         "/swagger-ui.html",
-        "/service ",
+        "/service",
         "/actuator/**",
-        "/checkService ",
+        "/checkService",
         "/configuration/ui",
         "/configuration/security",
         "/static/**",
@@ -37,19 +31,22 @@ class JBHAuthorizationCustomizer(
         "/css/**",
         "/images/**",
         "/webjars/**"
-    ) // other public endpoints of your API may be appended to this array
+    )
 
     override fun customize(registry: AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry) {
+        log.info("Registering JBH authorization rules")
 
-        log.info("Registering authorization rules")
-        registry.requestMatchers(*AUTH_WHITELIST).permitAll()
-        registry.requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
-        registry.requestMatchers("/user/**").hasAuthority("ROLE_USER")
-        registry.requestMatchers("/jbh/auth/**").permitAll()
-        registry.requestMatchers("/auth/**").permitAll()
-        registry.requestMatchers("/view/**").permitAll()
+        registry
+            //.requestMatchers(*AUTH_WHITELIST).permitAll()
+            .requestMatchers("/jbh/auth/signin").permitAll()  // Specific rule for signin
+            .requestMatchers("/jbh/auth/signup").permitAll()  // Specific rule for signin
+            .requestMatchers("/jbh/auth/**").permitAll()
+            .requestMatchers("/auth/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/party-deserialization/**").permitAll()
+            .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
+            .requestMatchers("/user/**").hasAuthority("ROLE_USER")
+            .anyRequest().authenticated()
 
-        registry.requestMatchers(HttpMethod.GET, "/party-deserialization/**").permitAll()
-        registry.anyRequest().authenticated()
+        log.info("Authorization rules registered successfully")
     }
 }

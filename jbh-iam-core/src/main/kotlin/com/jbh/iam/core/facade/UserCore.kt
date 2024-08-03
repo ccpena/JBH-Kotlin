@@ -11,4 +11,5 @@ data class UserCore(
     val nickName: String = DefaultValues.EMPTY_STRING,
     var password: String = DefaultValues.EMPTY_STRING,
     var roles: Set<UserRole> = mutableSetOf(UserRole())
+     
 )

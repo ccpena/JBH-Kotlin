@@ -16,7 +16,7 @@ data class UserDTO(
     val nickName: String = EMPTY_STRING,
     val roles: Set<Role> = emptySet(),
     val createdAt: LocalDateTime = LocalDateTime.now()
-) : JbhDTO, DomainConverter<UserDTO, User> {
+) : DomainConverter<UserDTO, User> {
 
     override fun toDomain(): User {
         var user = User(

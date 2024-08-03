@@ -2,7 +2,6 @@
 
 
 import com.jbh.iam.api.Routes
-import com.jbh.iam.api.domain.Users.RoleName
 import com.jbh.iam.api.domain.Users.User
 import com.jbh.iam.api.dto.AccountsDTO
 import com.jbh.iam.api.dto.UserGroupDTO
@@ -13,8 +12,9 @@ import com.jbh.iam.api.services.users.UserGroupServiceImpl
 import com.jbh.iam.api.services.users.UserServiceImpl
 import com.jbh.iam.common.config.JBHConstants.JBH_TOKEN_COOKIE_NAME
 import com.jbh.iam.common.payload.*
-import com.jbh.iam.security.facade.PasswordEncoderJBH
-import com.jbh.iam.security.model.AuthenticationManagerJBH
+import com.jbh.iam.core.access.AuthenticationOperation
+import com.jbh.iam.core.facade.RoleName
+import com.jbh.iam.core.security.IPasswordEncoder
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
@@ -31,7 +31,7 @@ import java.util.*
 class AuthController {
 
     @Autowired
-    lateinit var authenticationManager: AuthenticationManagerJBH
+    lateinit var authenticationManager: AuthenticationOperation
 
     @Autowired
     lateinit var userGroupServiceImpl: UserGroupServiceImpl
@@ -43,7 +43,7 @@ class AuthController {
     lateinit var roleRepository: RoleRepository
 
     @Autowired
-    lateinit var passwordEncoder: PasswordEncoderJBH
+    lateinit var passwordEncoder: IPasswordEncoder
 
 
     @Autowired
@@ -60,6 +60,7 @@ class AuthController {
         response: HttpServletResponse
     ): ResponseEntity<JwtAuthenticationResponse> {
 
+        log.info("Authenticating user")
         val jwt = authenticationManager.authenticate(
             loginRequest.usernameOrEmail!!,
             loginRequest.password!!
@@ -88,6 +89,7 @@ class AuthController {
 
     @PostMapping("/signup")
     fun registerUser(@RequestBody signUpRequest: SignUpRequest): ResponseEntity<*> {
+        log.info("Registering user")
         if (userService.existsByNickName(signUpRequest.username)) {
             return ResponseEntity(
                 ApiResponse(false, "NickName is already taken!"),

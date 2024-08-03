@@ -62,6 +62,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     }
 
     private fun authenticateUserByJwt(request: HttpServletRequest, jwt: String) {
+        logger.info("Authenticating user by JWT")
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             val userId = tokenProvider.getUserIdFromJWT(jwt)
             val userDetails = customUserDetailsService.loadUserById(userId!!)
@@ -78,12 +79,14 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     }
 
     private fun isStaticResource(uri: String): Boolean {
+        logger.info("Checking if $uri is static resource")
         val staticPaths = listOf("/js/", "/css/", "/images/", "/webjars/")
         return staticPaths.any { uri.contains(it) }
     }
 
     @Deprecated("Use getJwtFromCookie instead")
     private fun getJwtFromRequest(request: HttpServletRequest): String {
+        logger.info("Getting JWT from request")
         val bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION)
         if (bearerToken == null) {
             logger.error("Authorization header is missing in the request for URI: ${request.requestURI}")
@@ -95,6 +98,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     }
 
     private fun getJwtFromCookie(request: HttpServletRequest): String? {
+        logger.info("Getting JWT from cookie")
         val cookies = request.cookies
         return cookies?.find { it.name == JBH_TOKEN_COOKIE_NAME }?.value
     }
