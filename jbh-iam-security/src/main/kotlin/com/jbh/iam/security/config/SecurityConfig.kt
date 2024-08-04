@@ -1,6 +1,8 @@
 package com.jbh.iam.security.config
 
 
+import com.jbh.iam.security.authentication.JwtAuthenticationFilter
+import com.jbh.iam.security.authorization.AuthorizationRules
 import com.jbh.iam.security.service.CustomUserDetailsService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,7 +38,7 @@ class SecurityConfig() {
     var securityDebug = false
 
     @Autowired
-    lateinit var jbhAuthorizer: AuthorizationCustomizer
+    lateinit var jbhAuthorizer: AuthorizationRules
 
     companion object {
         private val log = LoggerFactory.getLogger(SecurityConfig::class.java)

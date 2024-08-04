@@ -1,4 +1,4 @@
-package com.jbh.iam.security.service
+package com.jbh.iam.security.authentication
 
 import com.jbh.iam.core.security.UserPrincipal
 import io.jsonwebtoken.*

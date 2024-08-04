@@ -1,40 +1,81 @@
-# Multi Module
+# Module Structure
 
-## Module Structure
-
-### jbh-iam-view-gateway
+## jbh-iam-view-gateway
 
 It's the main application module.
 
 Purpose: Handles the web interface, potentially using Thymeleaf for server-side rendering.
 Key components: Web controllers, Thymeleaf templates, and view-specific logic.
 
-### jbh-iam-common
+## jbh-iam-common
 
 Purpose: Contains shared code, utilities, and common models used across other modules.
 Key components: Likely includes basic data classes, utility functions, and possibly interface definitions.
 
-### jbh-iam-core
+## jbh-iam-core
 
 This module defines interfaces and domain models used by both API and security modules.
 
-#### Dependencly flow
+### Dependencly flow
 
 API Module → Core Module ← Security Module
 
-### jbh-iam-security
+## jbh-iam-security
 
 Purpose: Handles security configurations, JWT processing, and authentication/authorization logic.
 Key components: SecurityConfig, JwtAuthenticationFilter, and other security-related classes.
 
-### jbh-iam-api
+### Project Structure
+
+#### authentication package:
+
+JwtAuthenticationEntryPoint: Handles authentication errors
+JwtAuthenticationFilter: Intercepts requests to validate JWT tokens
+JwtTokenProvider: Generates and validates JWT tokens
+
+#### config package:
+
+SecurityConfig: Main security configuration class
+AuthorizationCustomizer: Customizes authorization rules
+
+#### model package:
+
+CurrentUser: Represents the currently authenticated user
+
+#### service package:
+
+AuthenticationServiceImpl: Implements authentication operations (likely an interface from iam-core)
+CustomUserDetailsService: Loads user-specific data for authentication
+PasswordEncoderImpl: Implements password encoding (likely an interface from iam-core)
+
+#### Tree-like package structure
+
+```
+com.jbh.iam.security
+├── authentication
+│   ├── JwtAuthenticationEntryPoint
+│   ├── JwtAuthenticationFilter
+│   └── JwtTokenProvider
+├── authorization
+│   └── AuthorizationRules
+├── config
+│   └── SecurityConfig
+├── model
+│   └── CurrentUser
+├── service
+│   ├── AuthenticationServiceImpl
+│   ├── CustomUserDetailsService
+│   └── PasswordEncoderImpl
+```
+
+## jbh-iam-api
 
 Purpose: Contains the main application logic, controllers, services, and data access layer.
 Key components: REST controllers, service implementations, repositories, and entity classes.
 
-## Flow
+# Flow
 
-### Sign In
+## Sign In
 
 1. [Security] `JwtAuthenticationFilter` intercepts the request and let the request pass because it's a public endpoint.
 2. [Api] Enters the `AuthController` and calls `AuthenticationOperationImpl.authenticateUser` method.

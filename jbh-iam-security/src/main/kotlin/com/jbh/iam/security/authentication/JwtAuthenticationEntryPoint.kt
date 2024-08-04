@@ -1,4 +1,4 @@
-package com.jbh.iam.security
+package com.jbh.iam.security.authentication
 
 
 import com.fasterxml.jackson.databind.ObjectMapper

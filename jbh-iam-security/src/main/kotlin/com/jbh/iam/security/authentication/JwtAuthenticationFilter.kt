@@ -1,9 +1,8 @@
-package com.jbh.iam.security.config
+package com.jbh.iam.security.authentication
 
 import com.jbh.iam.common.config.JBHConstants.JBH_TOKEN_COOKIE_NAME
 import com.jbh.iam.common.extensions.withMetadata
 import com.jbh.iam.security.service.CustomUserDetailsService
-import com.jbh.iam.security.service.JwtTokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

@@ -1,4 +1,4 @@
-package com.jbh.iam.security.config
+package com.jbh.iam.security.authorization
 
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpMethod
@@ -8,11 +8,11 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
 import org.springframework.stereotype.Component
 
 @Component
-class AuthorizationCustomizer :
+class AuthorizationRules :
     Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> {
 
     companion object {
-        private val log = LoggerFactory.getLogger(AuthorizationCustomizer::class.java)
+        private val log = LoggerFactory.getLogger(AuthorizationRules::class.java)
     }
 
     private val AUTH_WHITELIST = arrayOf(

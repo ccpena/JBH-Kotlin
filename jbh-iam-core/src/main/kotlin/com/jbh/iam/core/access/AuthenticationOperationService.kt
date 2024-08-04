@@ -3,6 +3,6 @@ package com.jbh.iam.core.access
 import org.springframework.stereotype.Component
 
 @Component
-interface AuthenticationOperation {
+interface AuthenticationOperationService {
     fun authenticate(usernameOrEmail: String, password: String): String
 }

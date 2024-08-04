@@ -12,7 +12,7 @@ import com.jbh.iam.api.services.users.UserGroupServiceImpl
 import com.jbh.iam.api.services.users.UserServiceImpl
 import com.jbh.iam.common.config.JBHConstants.JBH_TOKEN_COOKIE_NAME
 import com.jbh.iam.common.payload.*
-import com.jbh.iam.core.access.AuthenticationOperation
+import com.jbh.iam.core.access.AuthenticationOperationService
 import com.jbh.iam.core.model.RoleName
 import com.jbh.iam.core.security.IPasswordEncoder
 import jakarta.servlet.http.Cookie
@@ -31,7 +31,7 @@ import java.util.*
 class AuthController {
 
     @Autowired
-    lateinit var authenticationOperation: AuthenticationOperation
+    lateinit var authenticationOperationService: AuthenticationOperationService
 
     @Autowired
     lateinit var userGroupServiceImpl: UserGroupServiceImpl
@@ -61,7 +61,7 @@ class AuthController {
     ): ResponseEntity<JwtAuthenticationResponse> {
 
         log.info("Authenticating user")
-        val jwt = authenticationOperation.authenticate(
+        val jwt = authenticationOperationService.authenticate(
             loginRequest.usernameOrEmail!!,
             loginRequest.password!!
         )

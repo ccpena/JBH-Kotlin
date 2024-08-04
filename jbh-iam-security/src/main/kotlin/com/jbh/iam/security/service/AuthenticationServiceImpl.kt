@@ -1,6 +1,7 @@
 package com.jbh.iam.security.service
 
-import com.jbh.iam.core.access.AuthenticationOperation
+import com.jbh.iam.core.access.AuthenticationOperationService
+import com.jbh.iam.security.authentication.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -8,7 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 
 @Configuration
-class AuthenticationOperationImpl : AuthenticationOperation {
+class AuthenticationServiceImpl : AuthenticationOperationService {
 
     @Autowired
     lateinit var authenticationManager: AuthenticationManager
@@ -17,7 +18,7 @@ class AuthenticationOperationImpl : AuthenticationOperation {
     lateinit var tokenProvider: JwtTokenProvider
 
     companion object {
-        val log = org.slf4j.LoggerFactory.getLogger(AuthenticationOperationImpl::class.java)
+        val log = org.slf4j.LoggerFactory.getLogger(AuthenticationServiceImpl::class.java)
     }
 
     override fun authenticate(usernameOrEmail: String, password: String): String {
