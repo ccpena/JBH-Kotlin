@@ -53,8 +53,11 @@ PasswordEncoderImpl: Implements password encoding (likely an interface from iam-
 ```
 com.jbh.iam.security
 ├── authentication
+│   ├── filter
+│   │   └── JwtAuthenticationFilter
+│   ├── service
+│   │   └── AuthenticationServiceImpl
 │   ├── JwtAuthenticationEntryPoint
-│   ├── JwtAuthenticationFilter
 │   └── JwtTokenProvider
 ├── authorization
 │   └── AuthorizationRules
@@ -62,10 +65,11 @@ com.jbh.iam.security
 │   └── SecurityConfig
 ├── model
 │   └── CurrentUser
-├── service
-│   ├── AuthenticationServiceImpl
+├── user
 │   ├── CustomUserDetailsService
 │   └── PasswordEncoderImpl
+└── util
+    └── JwtUtil (if needed)
 ```
 
 ## jbh-iam-api

@@ -1,4 +1,4 @@
-package com.jbh.iam.security.service
+package com.jbh.iam.security.authentication.service
 
 import com.jbh.iam.core.access.AuthenticationOperationService
 import com.jbh.iam.security.authentication.JwtTokenProvider
