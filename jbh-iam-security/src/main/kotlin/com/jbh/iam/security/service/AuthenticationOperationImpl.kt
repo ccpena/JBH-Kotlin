@@ -1,4 +1,4 @@
-package com.jbh.iam.security.model
+package com.jbh.iam.security.service
 
 import com.jbh.iam.core.access.AuthenticationOperation
 import org.springframework.beans.factory.annotation.Autowired

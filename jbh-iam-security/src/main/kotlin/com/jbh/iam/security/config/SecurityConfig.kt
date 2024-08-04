@@ -1,7 +1,7 @@
 package com.jbh.iam.security.config
 
 
-import com.jbh.iam.security.model.CustomUserDetailsService
+import com.jbh.iam.security.service.CustomUserDetailsService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -19,7 +19,6 @@ import org.springframework.security.config.annotation.web.configurers.SessionMan
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.access.intercept.AuthorizationFilter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.util.*
 
@@ -37,7 +36,7 @@ class SecurityConfig() {
     var securityDebug = false
 
     @Autowired
-    lateinit var jbhAuthorizer: JBHAuthorizationCustomizer
+    lateinit var jbhAuthorizer: AuthorizationCustomizer
 
     companion object {
         private val log = LoggerFactory.getLogger(SecurityConfig::class.java)
@@ -142,25 +141,7 @@ class SecurityConfig() {
                 )
             }
 
-        val filterChain = http.build()
-
-        // Inspect the filter chain
-        filterChain.filters.forEach { filter ->
-            log.info("Filter found: ${filter.javaClass.simpleName}")
-            when (filter) {
-
-                is AuthorizationFilter -> {
-                    val accessDecisionManager = filter.authorizationManager
-                    val securityMetadataSource = filter.isObserveOncePerRequest
-                    // Log or inspect these components
-                    log.info("FilterSecurityInterceptor found with AccessDecisionManager: ${accessDecisionManager.javaClass.simpleName}")
-                    log.info("Security metadata source: ${securityMetadataSource.javaClass.simpleName}")
-                }
-                // You can add more specific checks for other filters
-            }
-        }
-
-        return filterChain
+        return http.build()
     }
 
     @Bean

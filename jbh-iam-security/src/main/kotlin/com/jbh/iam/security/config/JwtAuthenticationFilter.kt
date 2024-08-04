@@ -1,8 +1,9 @@
 package com.jbh.iam.security.config
 
 import com.jbh.iam.common.config.JBHConstants.JBH_TOKEN_COOKIE_NAME
-import com.jbh.iam.security.model.CustomUserDetailsService
-import com.jbh.iam.security.model.JwtTokenProvider
+import com.jbh.iam.common.extensions.withMetadata
+import com.jbh.iam.security.service.CustomUserDetailsService
+import com.jbh.iam.security.service.JwtTokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -79,9 +80,12 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     }
 
     private fun isStaticResource(uri: String): Boolean {
-        logger.info("Checking if $uri is static resource")
-        val staticPaths = listOf("/js/", "/css/", "/images/", "/webjars/")
-        return staticPaths.any { uri.contains(it) }
+        withMetadata("url" to uri) {
+            logger.info("Checking if $uri is static resource")
+            val staticPaths = listOf("/js/", "/css/", "/images/", "/webjars/")
+            return@withMetadata staticPaths.any { uri.contains(it) }
+        }
+        return false
     }
 
     @Deprecated("Use getJwtFromCookie instead")

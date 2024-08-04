@@ -31,7 +31,7 @@ import java.util.*
 class AuthController {
 
     @Autowired
-    lateinit var authenticationManager: AuthenticationOperation
+    lateinit var authenticationOperation: AuthenticationOperation
 
     @Autowired
     lateinit var userGroupServiceImpl: UserGroupServiceImpl
@@ -61,7 +61,7 @@ class AuthController {
     ): ResponseEntity<JwtAuthenticationResponse> {
 
         log.info("Authenticating user")
-        val jwt = authenticationManager.authenticate(
+        val jwt = authenticationOperation.authenticate(
             loginRequest.usernameOrEmail!!,
             loginRequest.password!!
         )
