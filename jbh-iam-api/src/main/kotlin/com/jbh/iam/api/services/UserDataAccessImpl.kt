@@ -2,8 +2,8 @@ package com.jbh.iam.api.services
 
 import com.jbh.iam.api.services.users.UserService
 import com.jbh.iam.core.access.UserDataAccess
-import com.jbh.iam.core.facade.UserCore
-import com.jbh.iam.core.facade.UserGroupCore
+import com.jbh.iam.core.model.UserCore
+import com.jbh.iam.core.model.UserGroupCore
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

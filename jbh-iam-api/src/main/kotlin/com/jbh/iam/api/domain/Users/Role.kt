@@ -1,6 +1,6 @@
 package com.jbh.iam.api.domain.Users
 
-import com.jbh.iam.core.facade.RoleName
+import com.jbh.iam.core.model.RoleName
 import jakarta.persistence.*
 import java.util.*
 

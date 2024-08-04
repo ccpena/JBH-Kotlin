@@ -13,7 +13,7 @@ import com.jbh.iam.api.services.users.UserServiceImpl
 import com.jbh.iam.common.config.JBHConstants.JBH_TOKEN_COOKIE_NAME
 import com.jbh.iam.common.payload.*
 import com.jbh.iam.core.access.AuthenticationOperation
-import com.jbh.iam.core.facade.RoleName
+import com.jbh.iam.core.model.RoleName
 import com.jbh.iam.core.security.IPasswordEncoder
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse

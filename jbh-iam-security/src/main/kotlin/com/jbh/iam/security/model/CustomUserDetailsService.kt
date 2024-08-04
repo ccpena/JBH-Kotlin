@@ -1,7 +1,7 @@
 package com.jbh.iam.security.model
 
 import com.jbh.iam.core.access.UserDataAccess
-import com.jbh.iam.core.facade.UserPrincipal
+import com.jbh.iam.core.security.UserPrincipal
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,6 +1,6 @@
 package com.jbh.iam.security.model
 
-import com.jbh.iam.core.facade.UserPrincipal
+import com.jbh.iam.core.security.UserPrincipal
 import io.jsonwebtoken.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value

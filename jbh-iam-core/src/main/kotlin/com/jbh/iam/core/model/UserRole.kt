@@ -1,4 +1,4 @@
-package com.jbh.iam.core.facade
+package com.jbh.iam.core.model
 
 import java.util.*
 

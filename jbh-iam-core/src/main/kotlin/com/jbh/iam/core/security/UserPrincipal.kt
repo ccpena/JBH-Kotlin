@@ -1,5 +1,7 @@
-package com.jbh.iam.core.facade
+package com.jbh.iam.core.security
 
+import com.jbh.iam.core.model.UserCore
+import com.jbh.iam.core.model.UserGroupCore
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*

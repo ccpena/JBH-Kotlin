@@ -7,9 +7,9 @@ import com.jbh.iam.api.exceptions.web.ResourceNotFoundException
 import com.jbh.iam.api.repositories.users.UserGroupRepository
 import com.jbh.iam.api.repositories.users.UserRepository
 import com.jbh.iam.api.services.CrudService
-import com.jbh.iam.core.facade.UserCore
-import com.jbh.iam.core.facade.UserGroupCore
-import com.jbh.iam.core.facade.UserRole
+import com.jbh.iam.core.model.UserCore
+import com.jbh.iam.core.model.UserGroupCore
+import com.jbh.iam.core.model.UserRole
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

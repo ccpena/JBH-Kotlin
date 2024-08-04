@@ -1,8 +1,8 @@
 package com.jbh.iam.api.services.users
 
 import com.jbh.iam.api.dto.UserDTO
-import com.jbh.iam.core.facade.UserCore
-import com.jbh.iam.core.facade.UserGroupCore
+import com.jbh.iam.core.model.UserCore
+import com.jbh.iam.core.model.UserGroupCore
 import java.util.*
 
 interface UserService {
